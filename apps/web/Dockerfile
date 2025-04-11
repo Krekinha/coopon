@@ -53,5 +53,7 @@ COPY --from=installer --chown=nextjs:nodejs /app/apps/web/public ./apps/web/publ
 EXPOSE 3020
 
 ENV PORT 3020
+ENV HOSTNAME "0.0.0.0"
+# CMD node apps/web/server.js
 
-CMD node apps/web/server.js
+CMD ["node", "server.js"]
