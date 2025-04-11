@@ -1,4 +1,7 @@
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
 
 # This Dockerfile is copy-pasted into our main docs at /docs/handbook/deploying-with-docker.
 # Make sure you update both files!
@@ -9,7 +12,9 @@ RUN apk update
 RUN apk add --no-cache libc6-compat
 # Set working directory
 WORKDIR /app
-RUN yarn global add turbo
+# Instala o turbo globalmente antes de usar
+RUN pnpm add --global turbo
+WORKDIR /app
 COPY . .
 RUN turbo prune web --docker
 
@@ -17,23 +22,19 @@ RUN turbo prune web --docker
 FROM base AS installer
 RUN apk update
 RUN apk add --no-cache libc6-compat
+# Instala o turbo novamente no estágio installer
+RUN pnpm add --global turbo
 WORKDIR /app
 
 # First install the dependencies (as they change less often)
 COPY --from=builder /app/out/json/ .
-RUN yarn install
+RUN pnpm install
 
 # Build the project
 COPY --from=builder /app/out/full/ .
 
-# Uncomment and use build args to enable remote caching
-# ARG TURBO_TEAM
-# ENV TURBO_TEAM=$TURBO_TEAM
-
-# ARG TURBO_TOKEN
-# ENV TURBO_TOKEN=$TURBO_TOKEN
-
-RUN yarn turbo build
+# RUN yarn turbo build
+RUN turbo build
 
 FROM base AS runner
 WORKDIR /app
