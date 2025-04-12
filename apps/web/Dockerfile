@@ -52,7 +52,9 @@ COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/we
 COPY --from=installer --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
 
 # Adicione este comando para verificar a estrutura de arquivos
-RUN ls -la /app
+USER root
+RUN find /app -name "server.js" | xargs ls -la
+USER nextjs
 
 EXPOSE 3020
 
@@ -61,4 +63,5 @@ ENV PORT 3020
 # Garanta que o Next.js escute em todas as interfaces
 ENV HOSTNAME "0.0.0.0"
 
-CMD ["node", "server.js"]
+# Ajuste o caminho para o server.js
+CMD ["sh", "-c", "ls -la && node ./apps/web/server.js"]
