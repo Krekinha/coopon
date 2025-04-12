@@ -54,4 +54,5 @@ EXPOSE 3020
 
 ENV PORT 3020
 
-CMD node apps/web/server.js
+# Corrigindo o caminho do arquivo server.js
+CMD node server.js
