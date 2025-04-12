@@ -34,7 +34,6 @@ RUN pnpm install
 # Build the project
 COPY --from=builder /app/out/full/ .
 
-# RUN yarn turbo build
 RUN turbo build
 
 FROM base AS runner
@@ -53,7 +52,8 @@ COPY --from=installer --chown=nextjs:nodejs /app/apps/web/public ./apps/web/publ
 
 # Adicione este comando para verificar a estrutura de arquivos
 USER root
-RUN find /app -name "server.js" | xargs ls -la
+RUN ls -la /
+
 USER nextjs
 
 EXPOSE 3020
@@ -64,4 +64,4 @@ ENV PORT 3020
 ENV HOSTNAME "0.0.0.0"
 
 # Ajuste o caminho para o server.js
-CMD ["sh", "-c", "ls -la && node ./apps/web/server.js"]
+CMD ["sh", "-c", "ls -la && node server.js"]
