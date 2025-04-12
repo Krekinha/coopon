@@ -42,7 +42,6 @@ WORKDIR /app
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
-USER nextjs
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
@@ -51,8 +50,9 @@ COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/we
 COPY --from=installer --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
 
 # Adicione este comando para verificar a estrutura de arquivos
-USER root
-RUN ls -la /
+# USER root
+# RUN ls -la /
+# RUN ls -la /app
 
 USER nextjs
 
@@ -63,5 +63,5 @@ ENV PORT 3020
 # Garanta que o Next.js escute em todas as interfaces
 ENV HOSTNAME "0.0.0.0"
 
-# Ajuste o caminho para o server.js
-CMD ["sh", "-c", "ls -la && node server.js"]
+# Ajuste o caminho para o server.js correto
+CMD ["node", "apps/web/server.js"]
