@@ -53,6 +53,7 @@ COPY --from=installer --chown=nextjs:nodejs /app/apps/web/public ./apps/web/publ
 EXPOSE 3020
 
 ENV PORT 3020
+ENV HOSTNAME "0.0.0.0"
+# CMD node apps/web/server.js
 
-# Corrigindo o caminho do arquivo server.js
-CMD node server.js
+CMD ["node", "server.js"]
