@@ -45,9 +45,9 @@ RUN adduser --system --uid 1001 nextjs
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
-COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
-COPY --from=installer --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
+COPY --from=installer --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=installer --chown=nextjs:nodejs /app/.next/static ./apps/web/.next/static
+COPY --from=installer --chown=nextjs:nodejs /app/public ./apps/web/public
 
 # Adicione este comando para verificar a estrutura de arquivos
 # USER root
@@ -64,4 +64,4 @@ ENV PORT 3020
 ENV HOSTNAME "0.0.0.0"
 
 # Ajuste o caminho para o server.js correto
-CMD ["node", "apps/web/server.js"]
+CMD ["node", "server.js"]
