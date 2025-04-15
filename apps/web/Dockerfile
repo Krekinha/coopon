@@ -43,6 +43,8 @@ WORKDIR /app
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
+RUN mkdir -p public
+
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=installer --chown=nextjs:nodejs /app/ .next/standalone ./
@@ -58,10 +60,9 @@ USER nextjs
 
 EXPOSE 3020
 
-ENV PORT 3020
-
 # Garanta que o Next.js escute em todas as interfaces
-ENV HOSTNAME "0.0.0.0"
+ENV PORT=3020
+ENV HOSTNAME="0.0.0.0"
 
 # Ajuste o caminho para o server.js correto
 CMD ["node", "server.js"]
