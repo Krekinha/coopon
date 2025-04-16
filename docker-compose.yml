@@ -6,9 +6,9 @@ services:
       dockerfile: ./apps/web/Dockerfile
     restart: always
     ports:
-      - 3003:3003
-    # networks:
-    #   - dokploy_network
+      - 3300:3300
+    networks:
+      - app_network
   api:
     container_name: api
     build:
@@ -16,11 +16,10 @@ services:
       dockerfile: ./apps/api/Dockerfile
     restart: always
     ports:
-      - 3001:3001
-    # networks:
-    #   - dokploy_network
+      - 3301:3301
+    networks:
+      - app_network
 
-# Define a network, which allows containers to communicate
-# with each other, by using their container name as a hostname
-# networks:
-#   app_network:
+networks:
+  app_network:
+   external: true

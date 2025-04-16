@@ -13,7 +13,6 @@ WORKDIR /app
 
 # Instala o turbo globalmente antes de usar
 RUN pnpm add --global turbo
-WORKDIR /app
 COPY . .
 RUN turbo prune web --docker
 
@@ -28,7 +27,6 @@ WORKDIR /app
 
 # Primeiro instale as dependências (elas mudam menos frequentemente)
 COPY --from=builder /app/out/json/ .
-
 RUN pnpm install
 
 # Build the project
@@ -43,26 +41,18 @@ WORKDIR /app
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-RUN mkdir -p public
+USER nextjs
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=installer --chown=nextjs:nodejs /app/ .next/standalone ./
-COPY --from=installer --chown=nextjs:nodejs /app/.next/static/ ./apps/web/.next/static/
-COPY --from=installer --chown=nextjs:nodejs /app/public ./apps/web/public
+COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
+COPY --from=installer --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=installer --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
 
-# Adicione este comando para verificar a estrutura de arquivos
-# USER root
-# RUN ls -la /
-# RUN ls -la /app
-
-USER nextjs
-
-EXPOSE 3020
+EXPOSE 3300
 
 # Garanta que o Next.js escute em todas as interfaces
-ENV PORT=3020
+ENV PORT=3300
 ENV HOSTNAME="0.0.0.0"
 
-# Ajuste o caminho para o server.js correto
-CMD ["node", "server.js"]
+CMD ["node", "apps/web/server.js"]
