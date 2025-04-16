@@ -48,6 +48,6 @@ EXPOSE 3301
 
 # Garanta que o Next.js escute em todas as interfaces
 ENV PORT=3301
-# ENV HOSTNAME="0.0.0.0"
+ENV HOSTNAME="0.0.0.0"
 
 CMD ["node", "apps/api/dist/index.js"]
